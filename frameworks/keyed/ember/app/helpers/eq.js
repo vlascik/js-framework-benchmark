@@ -1,18 +1,7 @@
-import Helper from '@ember/component/helper';
-import { inject as service } from '@ember/service';
-export default class EqHelper extends Helper {
-  @service('state') state;
+import { helper } from '@ember/component/helper';
 
-  id = null;
-  isSelected = false;
-
-  willDestroy() {
-    this.state.helpers.delete(this.id);
-  }
-
-  compute([{id}]) {
-    this.id = id;
-    this.state.helpers.set(id, this);
-    return this.isSelected;
-  }
+export function eq(params) {
+  return params[0] === params[1];
 }
+
+export default helper(eq);

@@ -1,12 +1,8 @@
 import { tracked } from '@glimmer/tracking';
 
-class TodoItem {
-    @tracked label;
-    @tracked id
-    constructor({label, id}) {
-        this.label = label;
-        this.id = id;
-    }
+const Item = {
+  @tracked label: '',
+  @tracked id: 0
 }
 
 const _random = (max) => {
@@ -21,33 +17,29 @@ const updateData = (data, mod = 10) => {
 }
 
 export const buildData = (id, count = 1000) => {
-    var adjectives = [
+    const adjectives = [
       "pretty", "large", "big", "small", "tall",
       "short", "long", "handsome", "plain", "quaint",
       "clean", "elegant", "easy", "angry", "crazy",
       "helpful", "mushy", "odd", "unsightly", "adorable",
       "important", "inexpensive", "cheap", "expensive", "fancy"];
 
-    var colours = [
+    const colours = [
       "red", "yellow", "blue", "green", "pink", "brown", "purple",
       "brown", "white", "black", "orange"];
 
-    var nouns = [
+    const nouns = [
       "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie",
       "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
-    var data = [];
+    let data = [];
 
-    for (var i = 0; i < count; i++)
-        data.push(new TodoItem({
-          id: id++,
-          label: adjectives[_random(adjectives.length)]
-            + " "
-            + colours[_random(colours.length)]
-            + " "
-            + nouns[_random(nouns.length)]
-        }));
-
+    for (let i = 0; i < count; i++) {
+        const item = Object.create(Item);
+        item.id = id++;
+        item.label = `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`;
+        data.push(item);
+    }
     return {data, id};
 }
 
@@ -78,9 +70,13 @@ export const swapRows = (data) => {
     return newData;
 }
 
-export const deleteRow = (data, id) => {
+export const deleteRow1 = (data, id) => {
     return data.filter(d => {
         return d.id !== id
     });
 }
 
+export const deleteRow = (data, id) => {
+  const idx = data.findIndex((d) => d.id === id);
+  return [...data.slice(0, idx), ...data.slice(idx + 1)];
+}
